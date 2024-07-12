@@ -1,0 +1,30 @@
+const Footer = () => {
+  return (
+    <footer className="mt-20 border-t py-10 border-neutral-700">
+      <div className="container mx-auto text-center">
+        <p className="mb-4">
+          &copy; 2024 &nbsp; QuickPass. &nbsp; All rights reserved.
+        </p>
+        <nav className="flex justify-center space-x-4">
+          <a
+            href="/privacy-policy"
+            className="text-neutral-500 hover:text-white"
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="/terms-of-service"
+            className="text-neutral-500 hover:text-white"
+          >
+            Terms of Service
+          </a>
+          <a href="/contact-us" className="text-neutral-500 hover:text-white">
+            Contact Us
+          </a>
+        </nav>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
