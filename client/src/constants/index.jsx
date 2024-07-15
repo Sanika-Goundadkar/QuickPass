@@ -8,9 +8,9 @@ import { Search } from "lucide-react";
 import { Database } from "lucide-react";
 
 export const navItems = [
-  { label: "Home", href: "#" },
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Home", href: "/home" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const features = [
