@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import BackButton from "./BackButton";
 
 const RegisterContainer = () => {
   const [name, setName] = useState("");
@@ -31,9 +32,10 @@ const RegisterContainer = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
+    <div className="min-h-screen flex items-center justify-center">
+      <BackButton />
       <div className="max-w-md w-full bg-gray-800 shadow-md rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">
+        <h2 className="bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-3xl mb-6 text-center">
           Register
         </h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -50,23 +52,23 @@ const RegisterContainer = () => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
           <div className="mb-4">
             <label
               className="block text-gray-400 text-sm font-bold mb-2"
-              htmlFor="username"
+              htmlFor="email"
             >
-              Username
+              Email
             </label>
             <input
-              type="text"
+              type="email"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
@@ -82,14 +84,14 @@ const RegisterContainer = () => {
               id="registerMasterPassword"
               value={masterPassword}
               onChange={(e) => setMasterPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center justify-between">
             <button
               type="submit"
-              className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white font-bold my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={isLoading}
@@ -98,7 +100,7 @@ const RegisterContainer = () => {
             </button>
             <p className="text-gray-400 text-sm">
               Already registered?{" "}
-              <Link to="/login" className="text-blue-400 hover:text-blue-200">
+              <Link to="/login" className="text-blue-700 hover:text-blue-500">
                 Click here to login
               </Link>
             </p>

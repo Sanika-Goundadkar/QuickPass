@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import BackButton from "./BackButton";
 
 const LoginContainer = () => {
   const [email, setEmail] = useState("");
@@ -29,6 +31,7 @@ const LoginContainer = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
+      <BackButton />
       <div className="max-w-md w-full bg-gray-800 shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-white">
           Login
@@ -47,7 +50,7 @@ const LoginContainer = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
@@ -63,21 +66,29 @@ const LoginContainer = () => {
               id="masterPassword"
               value={masterPassword}
               onChange={(e) => setMasterPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center justify-between">
             <button
               type="submit"
-              className={`bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white w-20 font-bold my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={isLoading}
             >
               {isLoading ? "Logging in..." : "Login"}
             </button>
-            
+            <p className="text-gray-400 text-sm">
+              New to QuickPass?{" "}
+              <Link
+                to="/register"
+                className="text-blue-700 hover:text-blue-500"
+              >
+                Click here
+              </Link>
+            </p>
           </div>
         </form>
       </div>

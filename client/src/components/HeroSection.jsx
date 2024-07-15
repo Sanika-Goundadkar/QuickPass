@@ -1,3 +1,6 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 const HeroSection = () => {
   return (
     <div className="flex flex-col items-center mt-6 lg:mt-20">
@@ -15,12 +18,12 @@ const HeroSection = () => {
         passwords. Experience seamless and worry-free login today.
       </p>
       <div className="flex justify-center my-10">
-        <a
-          href="#"
+        <Link
+          to="/register"
           className="text-center py-3 px-4 mx-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
         >
           Get Started &nbsp; &gt;
-        </a>
+        </Link>
       </div>
     </div>
   );
