@@ -73,7 +73,7 @@ export const checklistItems = [
   },
   {
     title: "User Settings",
-    description: "Update the profile details and master password easily. .",
+    description: "Update the profile details and master password easily.",
   },
 ];
 

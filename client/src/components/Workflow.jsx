@@ -12,9 +12,9 @@ const Workflow = () => {
           management workflow
         </span>
       </h2>
-      <div className="flex flex-wrap justify-center">
-        <div className="p-2 w-full lg:w-1/2">
-          <img src="" alt="app-img" />
+      <div className="flex items-center flex-wrap justify-center">
+        <div className="py-6 w-full lg:w-1/2"> 
+          <img src="/workflow-img.svg" alt="app-img" />
         </div>
         <div className="pt-12 w-full lg:w-1/2">
           {checklistItems.map((item, index) => (
