@@ -35,21 +35,20 @@ const RegisterContainer = () => {
     <div className="min-h-screen flex items-center justify-center">
       <BackButton />
       <div className="max-w-md w-full bg-gray-800 shadow-md rounded-lg p-8">
-        <h2 className="bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-3xl mb-6 text-center">
-          Register
-        </h2>
+      <div className="flex flex-col items-center py-2">
+            <h3 className="text-2xl my-1">Register to</h3>
+            <h1 className="text-4xl my-1 font-bold mb-6 text-center bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text tracking-wide">
+              QuickPass
+            </h1>
+          </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleRegister}>
           <div className="mb-4">
-            <label
-              className="block text-gray-400 text-sm font-bold mb-2"
-              htmlFor="name"
-            >
-              Name
-            </label>
+            
             <input
               type="text"
               id="name"
+              placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
@@ -57,15 +56,11 @@ const RegisterContainer = () => {
             />
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-400 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
+            
             <input
               type="email"
               id="username"
+              placeholder="Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
@@ -73,15 +68,11 @@ const RegisterContainer = () => {
             />
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-400 text-sm font-bold mb-2"
-              htmlFor="registerMasterPassword"
-            >
-              Master Password
-            </label>
+            
             <input
               type="password"
               id="registerMasterPassword"
+              placeholder="Set master password"
               value={masterPassword}
               onChange={(e) => setMasterPassword(e.target.value)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
@@ -91,14 +82,14 @@ const RegisterContainer = () => {
           <div className="flex flex-col items-center justify-between">
             <button
               type="submit"
-              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white font-bold my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={isLoading}
             >
               {isLoading ? "Registering..." : "Register"}
             </button>
-            <p className="text-gray-400 text-sm">
+            <p className="text-white text-sm">
               Already registered?{" "}
               <Link to="/login" className="text-blue-700 hover:text-blue-500">
                 Click here to login
