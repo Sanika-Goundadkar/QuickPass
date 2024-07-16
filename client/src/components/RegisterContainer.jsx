@@ -52,7 +52,7 @@ const RegisterContainer = () => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
@@ -68,7 +68,7 @@ const RegisterContainer = () => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
@@ -84,7 +84,7 @@ const RegisterContainer = () => {
               id="registerMasterPassword"
               value={masterPassword}
               onChange={(e) => setMasterPassword(e.target.value)}
-              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>

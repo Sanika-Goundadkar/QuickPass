@@ -5,7 +5,6 @@ import Workflow from "../components/Workflow.jsx";
 import Footer from "../components/Footer.jsx";
 import CallToAction from "../components/CallToAction.jsx";
 
-
 const Home = () => {
   return (
     <>

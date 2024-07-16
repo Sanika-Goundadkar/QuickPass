@@ -1,3 +1,6 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="mt-20 border-t py-10 border-neutral-700">
@@ -6,21 +9,18 @@ const Footer = () => {
           &copy; 2024 &nbsp; QuickPass. &nbsp; All rights reserved.
         </p>
         <nav className="flex justify-center space-x-4">
-          <a
-            href="/privacy-policy"
-            className="text-neutral-500 hover:text-white"
-          >
+          <Link to="/privacy" className="text-neutral-500 hover:text-white">
             Privacy Policy
-          </a>
-          <a
-            href="/terms-of-service"
+          </Link>
+          <Link
+            to="/terms-of-service"
             className="text-neutral-500 hover:text-white"
           >
             Terms of Service
-          </a>
-          <a href="/contact-us" className="text-neutral-500 hover:text-white">
+          </Link>
+          <Link to="/contact" className="text-neutral-500 hover:text-white">
             Contact Us
-          </a>
+          </Link>
         </nav>
       </div>
     </footer>
