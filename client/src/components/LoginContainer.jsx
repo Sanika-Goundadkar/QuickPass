@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import BackButton from "./BackButton";
 
+// axios.defaults.baseURL = "http://localhost:5000"; // Replace with your backend server URL
+
 const LoginContainer = () => {
   const [email, setEmail] = useState("");
   const [masterPassword, setMasterPassword] = useState("");
