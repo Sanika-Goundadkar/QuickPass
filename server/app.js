@@ -2,9 +2,8 @@ import express, { json } from "express";
 import dotenv from "dotenv";
 import connectDb from "./database/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import passwordRoutes from "./routes/passwordRoutes.js";
 import cors from "cors";
-import userModel from "./models/userModel.js";
-
 
 dotenv.config();
 connectDb();
@@ -14,9 +13,9 @@ app.use(json());
 app.use(cors());
 
 app.use("/api", userRoutes);
+app.use("/api/", passwordRoutes);
 
-
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT} `);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
