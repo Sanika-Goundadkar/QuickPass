@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import BackButton from "./BackButton";
+// import { set } from "mongoose";
 
 // axios.defaults.baseURL = "http://localhost:5000"; // Replace with your backend server URL
 
@@ -10,6 +11,7 @@ const LoginContainer = () => {
   const [masterPassword, setMasterPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,8 +26,10 @@ const LoginContainer = () => {
 
       // Handle successful login (e.g., redirect to TOTP authentication)
       console.log("Login successful:", response.data);
+      alert("Login successful");
     } catch (error) {
-      setError("Login failed. Please check your credentials.");
+      setError(error.response.data.message);
+      console.log(error);
     }
 
     setIsLoading(false);
@@ -43,7 +47,7 @@ const LoginContainer = () => {
               QuickPass
             </h1>
           </div>
-          <div className="mx-5 px-5">
+          <div className="mx-0 px-0">
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
@@ -52,22 +56,22 @@ const LoginContainer = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 mx-0 px-0">
                 <input
                   type="password"
                   placeholder="Master password"
                   id="masterPassword"
                   value={masterPassword}
                   onChange={(e) => setMasterPassword(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
                   required
                 />
               </div>
-              <div className="flex flex-col items-center justify-between">
+              <div className="flex flex-col items-center justify-between mx-0 px-0">
                 <button
                   type="submit"
                   className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white w-20  my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${

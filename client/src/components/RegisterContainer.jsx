@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import BackButton from "./BackButton";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterContainer = () => {
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [masterPassword, setMasterPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,14 +20,16 @@ const RegisterContainer = () => {
     try {
       const response = await axios.post("/api/register", {
         name,
-        username,
-        masterPassword,
+        email,
+        password,
       });
 
       // Handle successful registration (e.g., show success message or redirect)
       console.log("Registration successful:", response.data);
+      toast.success("Registration successful!");
     } catch (error) {
-      setError("Registration failed. Please try again.");
+      setError(error.response.data.message);
+      console.log(error);
     }
 
     setIsLoading(false);
@@ -35,16 +39,15 @@ const RegisterContainer = () => {
     <div className="min-h-screen flex items-center justify-center">
       <BackButton />
       <div className="max-w-md w-full bg-gray-800 shadow-md rounded-lg p-8">
-      <div className="flex flex-col items-center py-2">
-            <h3 className="text-2xl my-1">Register to</h3>
-            <h1 className="text-4xl my-1 font-bold mb-6 text-center bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text tracking-wide">
-              QuickPass
-            </h1>
-          </div>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="flex flex-col items-center justify-between">
+          <h3 className="text-2xl my-1">Register to</h3>
+          <h1 className="text-4xl my-1 font-bold mb-6 text-center bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text tracking-wide">
+            QuickPass
+          </h1>
+        </div>
+        <center>{error && <p className="text-red-500 mb-4">{error}</p>}</center>
         <form onSubmit={handleRegister}>
           <div className="mb-4">
-            
             <input
               type="text"
               id="name"
@@ -56,25 +59,23 @@ const RegisterContainer = () => {
             />
           </div>
           <div className="mb-4">
-            
             <input
               type="email"
-              id="username"
+              id="email"
               placeholder="Email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
           </div>
           <div className="mb-4">
-            
             <input
               type="password"
-              id="registerMasterPassword"
+              id="password"
               placeholder="Set master password"
-              value={masterPassword}
-              onChange={(e) => setMasterPassword(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
