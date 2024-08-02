@@ -41,17 +41,19 @@ router.post("/login", async (req, res) => {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid email" });
     }
 
     const isMatch = await user.comparePassword(masterPassword);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
 
     // Handle successful login (e.g., proceed to TOTP authentication)
-    res.status(200).json({ message: "Login successful", userId: user._id });
+    res
+      .status(200)
+      .json({ message: "Login successful", success: true, userId: user._id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -63,20 +65,20 @@ router.put("/updateuser/:id", async (req, res) => {
     const { id } = req.params;
     const updateUser = req.body;
     await userModel.findByIdAndUpdate(id, updateUser, { new: true }); //findByIdAndUpdate  --> function of mongoose
-    res.status(200).json({ message: "User details updated successfully"});
+    res.status(200).json({ message: "User details updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-router.delete("/deleteuser/:id", async (req, res) =>{
+router.delete("/deleteuser/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deleteUser = req.body;
     await userModel.findByIdAndDelete(id, deleteUser, { new: true }); //findByIdAndDelete --> function of mongoose
-    res.status(200).json({ message: "User deleted successfully"});
-  }catch(error){
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
   }

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const securityQuestionSchema = Schema(
+const securityQuestionSchema = new Schema(
   {
     questionOne: {
       type: String,
@@ -17,6 +17,10 @@ const securityQuestionSchema = Schema(
     questionFour: {
       type: String,
       required: [true, "Please answer this question"],
+    },
+    belongsTo: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {

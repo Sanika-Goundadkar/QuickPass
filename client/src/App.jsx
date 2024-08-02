@@ -10,6 +10,8 @@ import TermsOfService from "./pages/TermsOfService";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import OtpVerification from "./pages/Otp.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 const App = () => {
   return (
@@ -21,7 +23,10 @@ const App = () => {
           <Route exact path="/about" element={<About />} />
           <Route exact path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/otp" element={<OtpVerification />} />
+
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />

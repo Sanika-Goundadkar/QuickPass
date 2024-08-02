@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackButton from "./BackButton";
 // import { set } from "mongoose";
@@ -12,6 +12,7 @@ const LoginContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,20 +20,40 @@ const LoginContainer = () => {
     setError("");
 
     try {
-      const response = await axios.post("/api/login", {
+      const loginResponse = await axios.post("/api/login", {
         email,
         masterPassword,
       });
 
-      // Handle successful login (e.g., redirect to TOTP authentication)
-      console.log("Login successful:", response.data);
-      alert("Login successful");
+      // Handling successful login (Redirecting to OTP authentication)
+      if (loginResponse.data.success) {
+        console.log("Login successful:", loginResponse.data);
+        alert("Login successful");
+        localStorage.setItem("email", email); // Store email in local storage
+        navigate("/otp");
+        try {
+          const otpResponse = await axios.post("/api/send-otp", {
+            email,
+          });
+          if (otpResponse.data.success) {
+            console.log("OTP sent successful:", otpResponse.data);
+            alert("OTP sent successful");
+          } else {
+            setError("Failed to send OTP");
+          }
+        } catch (error) {
+          setError(error.response?.data?.message || "Error sending OTP");
+          console.log(error);
+        }
+      } else {
+        setError("Invalid email or password");
+      }
     } catch (error) {
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || "Login failed");
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -70,6 +91,15 @@ const LoginContainer = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
                   required
                 />
+                <p className="text-white pt-3 text-sm">
+                  Forgot password?{" "}
+                  <Link
+                    to="/resetpassword"
+                    className="text-blue-700 hover:text-blue-500"
+                  >
+                    Click here
+                  </Link>
+                </p>
               </div>
               <div className="flex flex-col items-center justify-between mx-0 px-0">
                 <button

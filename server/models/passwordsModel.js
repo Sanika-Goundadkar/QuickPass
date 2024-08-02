@@ -1,10 +1,11 @@
 import { Schema, model } from "mongoose";
 
-const passwordSchema = Schema(
+const passwordSchema = new Schema(
   {
     accountName: {
       type: String,
       required: true,
+      index: true,
     },
     userName: {
       type: String,
@@ -21,6 +22,10 @@ const passwordSchema = Schema(
     category: {
       type: String,
       required: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {
