@@ -4,6 +4,7 @@ import connectDb from "./database/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import passwordRoutes from "./routes/passwordRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
+import bodyParser from "body-parser";
 
 import cors from "cors";
 
@@ -11,7 +12,8 @@ dotenv.config();
 connectDb();
 
 const app = express();
-app.use(json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/api", userRoutes);

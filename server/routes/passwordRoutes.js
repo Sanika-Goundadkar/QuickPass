@@ -18,7 +18,7 @@ router.post("/passwords", async (req, res) => {
   }
 });
 
-router.put("/passwords/:id", async (req, res) => {
+router.patch("/passwords/:id", async (req, res) => {
   console.log(req.body);
   try {
     const updatedPassword = await passwordsModel.findByIdAndUpdate(
