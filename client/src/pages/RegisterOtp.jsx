@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const OtpVerification = () => {
+const RegisterOtpVerification = () => {
   const email = localStorage.getItem("email");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -36,7 +36,7 @@ const OtpVerification = () => {
 
         console.log("Before removing email: ", localStorage.getItem("email"));
         console.log("After removing email: ", localStorage.getItem("email"));
-        navigate("/verify-security-questions");
+        navigate("/security-questions");
       } else {
         setError("Invalid OTP");
       }
@@ -79,4 +79,4 @@ const OtpVerification = () => {
   );
 };
 
-export default OtpVerification;
+export default RegisterOtpVerification;

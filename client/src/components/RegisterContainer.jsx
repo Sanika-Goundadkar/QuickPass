@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useNavigate } from "react-router-dom";
 import BackButton from "./BackButton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,6 +11,7 @@ const RegisterContainer = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -24,9 +25,45 @@ const RegisterContainer = () => {
         password,
       });
 
-      // Handle successful registration (e.g., show success message or redirect)
-      console.log("Registration successful:", response.data);
-      toast.success("Registration successful!");
+      if (response.data.success) {
+        // Handle successful registration (e.g., show success message or redirect)
+        localStorage.setItem("email", email);
+        console.log("Registration successful:", response.data);
+        toast.success("Registration successful!");
+        localStorage.getItem("email", email);
+        localStorage.setItem("userID", response.data.id);
+
+        try {
+          const userID = localStorage.getItem("userID");
+          console.log(userID);
+          const otpResponse = await axios.post("/api/send-otp", {
+            email,
+          });
+          // const id = otpResponse.data.id;
+          if (otpResponse.data.success) {
+            console.log("OTP sent successful:", otpResponse.data);
+            alert("OTP sent successful");
+            navigate("/register-otp");
+            console.log("redirecting to OTP authentication");
+
+            // window.location.replace("/otp");
+          } else {
+            setError("Failed to send OTP");
+            const deleteUserResponse = await axios.post(
+              "/api/deleteuser/userID",
+              {
+                email,
+              }
+            );
+            console.log("User deleted", deleteUserResponse);
+          }
+        } catch (error) {
+          setError(error.response?.data?.message || "Error sending OTP");
+          console.log(error);
+        }
+      } else {
+        toast.error("Registration failed!");
+      }
     } catch (error) {
       setError(error.response.data.message);
       console.log(error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackButton from "./BackButton";
@@ -28,16 +28,26 @@ const LoginContainer = () => {
       // Handling successful login (Redirecting to OTP authentication)
       if (loginResponse.data.success) {
         console.log("Login successful:", loginResponse.data);
+        localStorage.setItem("userID", loginResponse.data.userId);
+
         alert("Login successful");
         localStorage.setItem("email", email); // Store email in local storage
-        navigate("/otp");
+        console.log(email);
+        const userID = localStorage.getItem("userID");
+        console.log(userID);
+
         try {
           const otpResponse = await axios.post("/api/send-otp", {
             email,
           });
+
           if (otpResponse.data.success) {
             console.log("OTP sent successful:", otpResponse.data);
             alert("OTP sent successful");
+            navigate("/otp");
+            console.log("redirecting to OTP authentication");
+
+            // window.location.replace("/otp");
           } else {
             setError("Failed to send OTP");
           }

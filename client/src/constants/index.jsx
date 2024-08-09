@@ -23,13 +23,12 @@ export const features = [
     icon: <Layers3 />,
     text: "3 Layers of Security",
     description:
-      "Secured with three layers of authentication,Master password, TOTP, & Color Recognition.",
+      "Secured with three layers of authentication,Master password, OTP, & Security Questions.",
   },
   {
     icon: <WifiOff />,
     text: "Access Offline",
-    description:
-      "Can also access your vault even when with being offline after you have logged-in.",
+    description: "Access your vault even when offline once you are logged in.",
   },
   {
     icon: <MonitorSmartphone />,
