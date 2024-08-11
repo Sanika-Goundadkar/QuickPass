@@ -21,6 +21,7 @@ const HeroSection = () => {
         <Link
           to="/register"
           className="text-center py-3 px-4 mx-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
+          title="Register to QuickPass"
         >
           Get Started &nbsp; &gt;
         </Link>

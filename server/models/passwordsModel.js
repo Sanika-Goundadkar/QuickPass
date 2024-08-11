@@ -17,11 +17,11 @@ const passwordSchema = new Schema(
     },
     url: {
       type: String,
-      required: true,
+      // required: true,
     },
     category: {
       type: String,
-      required: true,
+      // required: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,

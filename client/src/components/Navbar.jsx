@@ -15,7 +15,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
             <img className="h-10 w-10 mr-2" src="/logo.png" alt="logo" />
-            <span className="text-xl tracking-tight">QuickPass</span>
+            <span className="text-xl font-semibold tracking-tight">QuickPass</span>
           </div>
           <ul className="hidden lg:flex ml-14 space-x-12">
             {navItems.map((item, index) => (
@@ -25,15 +25,20 @@ const Navbar = () => {
             ))}
           </ul>
           <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <Link to="/login" className="py-2 px-3 border rounded-md">
-              Sign In
+            <Link
+              to="/login"
+              className="py-2 px-3 border rounded-md"
+              title="Login to your QuickPass account"
+            >
+              Sign In &nbsp; &gt;
             </Link>
 
             <Link
               to="/register"
               className="py-2 px-3 border rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
+              title="Register to QuickPass"
             >
-              Create an account
+              Join QuickPass &nbsp; &gt;
             </Link>
           </div>
           <div className="lg:hidden md:flex flex-col justify-end">
@@ -53,13 +58,13 @@ const Navbar = () => {
             </ul>
             <div className="flex space-x-6">
               <Link to="/login" className="py-2 px-3 border rounded-md">
-                Sign In
+                Sign In &nbsp; &gt;
               </Link>
               <Link
                 to="/register"
                 className="py-2 px-3 border rounded-md bg-gradient-to-r from-orange-500 to-orange-800"
               >
-                Create an account
+                Create an account &nbsp; &gt;
               </Link>
             </div>
           </div>

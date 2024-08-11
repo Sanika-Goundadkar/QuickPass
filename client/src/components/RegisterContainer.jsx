@@ -29,7 +29,7 @@ const RegisterContainer = () => {
         // Handle successful registration (e.g., show success message or redirect)
         localStorage.setItem("email", email);
         console.log("Registration successful:", response.data);
-        toast.success("Registration successful!");
+        alert("Registration successful!");
         localStorage.getItem("email", email);
         localStorage.setItem("userID", response.data.id);
 
@@ -120,6 +120,7 @@ const RegisterContainer = () => {
           <div className="flex flex-col items-center justify-between">
             <button
               type="submit"
+              title="Register to QuickPass"
               className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}

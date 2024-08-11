@@ -57,8 +57,8 @@ router.post("/verify-security-questions", async (req, res) => {
 
     if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
       res.status(200).json({
-        success: true,
         message: "Security questions verified successfully",
+        success: true,
       });
     } else {
       res.status(400).json({

@@ -1,5 +1,8 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
+import Password from "../models/passwordsModel.js";
+import SecurityQuestions from "../models/securityQuestionsModel.js";
 
 const router = express.Router();
 
@@ -46,7 +49,9 @@ router.post("/login", async (req, res) => {
     console.log("User found", user);
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid email" });
+      return res
+        .status(400)
+        .json({ message: "User not found, Register first" });
     }
 
     const isMatch = await user.comparePassword(masterPassword);
@@ -69,11 +74,29 @@ router.post("/login", async (req, res) => {
 router.patch("/updateuser/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    const updateData = req.body;
+    console.log("Update request data", updateData);
 
-    const updateUser = req.body;
-    console.log("Update User:", updateUser);
+    // Find the user by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    await User.findByIdAndUpdate(id, updateUser, { new: true }); //findByIdAndUpdate  --> function of mongoose
+    // Update fields
+    if (updateData.password) {
+      // Hash the password if it's being updated
+      user.password = updateData.password;
+    }
+    if (updateData.name) {
+      user.name = updateData.name;
+    }
+    if (updateData.email) {
+      user.email = updateData.email;
+    }
+
+    // Save the document
+    await user.save();
     res.status(200).json({ message: "User details updated successfully" });
   } catch (error) {
     console.error(error);
@@ -81,21 +104,46 @@ router.patch("/updateuser/:id", async (req, res) => {
   }
 });
 
+router.get("/user/:id", async (req, res) => {
+  // route to get user's details
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error in Get user api:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.delete("/deleteuser/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("ID:", id);
-    const deleteUser = req.body;
-    console.log("Delete User: ", deleteUser);
 
+    // Find the user by ID
     const user = await User.findById(id);
-    console.log("User details", user);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    await User.findByIdAndDelete(id, deleteUser, { new: true }); //findByIdAndDelete --> function of mongoose
-    res.status(200).json({ message: "User deleted successfully" });
+    // Delete all security questions associated with the user
+    await SecurityQuestions.deleteMany({ belongsTo: id });
+
+    // Delete all passwords associated with the user
+    await Password.deleteMany({ createdBy: id });
+
+    // Delete the user
+    await User.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({
+        message: "User and associated data deleted successfully",
+        statusbar: "success",
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

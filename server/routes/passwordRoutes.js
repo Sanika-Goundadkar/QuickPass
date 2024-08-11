@@ -13,7 +13,7 @@ router.post("/passwords", async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in Add Password api", error);
     res.status(500).json({ message: "Server Error" });
   }
 });
@@ -37,12 +37,31 @@ router.patch("/passwords/:id", async (req, res) => {
   }
 });
 
-// router.get("/passwords/:id", async (req, res) => {
-//     // route to get all the passwords
-// });
+router.get("/passwords", async (req, res) => {
+  // route to get all the passwords of logged in user
+  try {
+    const userId = req.query.userID;
+    console.log("Received userID:", userId);
+
+    const passwords = await passwordsModel.find({ createdBy: userId });
+    console.log("Passwords retrieved:", passwords);
+
+    res.status(200).json({
+      success: true,
+      passwords: passwords,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch passwords",
+      error: error.message,
+    });
+    console.log(error);
+  }
+});
 
 router.delete("/passwords/:id", async (req, res) => {
-  console.log(req.body);
+  console.log(req.params);
   try {
     const { id } = req.params;
     await passwordsModel.findByIdAndDelete(id);

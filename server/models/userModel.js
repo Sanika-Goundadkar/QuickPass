@@ -31,18 +31,18 @@ const userSchema = new Schema(
   }
 );
 
-// // Hash the password before saving it to the database
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
+// Hash the password before saving it to the database
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
 
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// });
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
-// // compare the password with the hashed password
-// userSchema.methods.isPasswordCorrect = async function(password) {
-//   return await bcrypt.compare(password, this.password);
-// }
+// compare the password with the hashed password
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 // //Generating the JWT access token
 // userSchema.methods.generateAccessToken = function () {
@@ -72,10 +72,10 @@ const userSchema = new Schema(
 //   );
 // };
 
-// Compare the entered password with the stored password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  // Directly compare the passwords as plain text
-  return enteredPassword === this.password;
-};
+// // Compare the entered password with the stored password
+// userSchema.methods.comparePassword = async function (enteredPassword) {
+//   // Directly compare the passwords as plain text
+//   return enteredPassword === this.password;
+// };
 
 export default model("User", userSchema); //User is the name of collection(converted to 'uses'-> all lowercase & plural)
