@@ -5,6 +5,7 @@ import { Button, Modal, Label, TextInput } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
 
 const Dashboard = () => {
   const userID = localStorage.getItem("userID");
@@ -26,26 +27,26 @@ const Dashboard = () => {
 
   console.log("userID: ", userID);
 
-  useEffect(() => {
-    const fetchPasswords = async () => {
-      const storedUserID = localStorage.getItem("userID");
-      if (!storedUserID) {
-        alert("Please Authenticate to Access Data.");
-        // Redirect to login or show an error
-        window.location.href = "/login";
-        return null; // Prevent further execution of the component
+  const fetchPasswords = async () => {
+    const userID = localStorage.getItem("userID");
+    if (!userID) {
+      alert("Please Authenticate to Access Data.");
+      // Redirect to login or show an error
+      window.location.href = "/login";
+      return null; // Prevent further execution of the component
+    }
+    try {
+      const response = await axiosInstance.get(`/passwords?userID=${userID}`);
+      setPasswords(response.data.passwords);
+      if (response.data.passwords.length === 0) {
+        setNoPasswords(true);
       }
-      try {
-        const response = await axios.get(`/api/passwords?userID=${userID}`);
-        setPasswords(response.data.passwords);
-        if (response.data.passwords.length === 0) {
-          setNoPasswords(true);
-        }
-      } catch (error) {
-        console.error("Error fetching passwords:", error);
-      }
-    };
+    } catch (error) {
+      console.error("Error fetching passwords:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchPasswords();
   }, [userID]);
 
@@ -68,7 +69,7 @@ const Dashboard = () => {
         category,
         createdBy: userID,
       };
-      await axios.post("/api/passwords", newPassword);
+      await axiosInstance.post("/passwords", newPassword);
       setOpenAddModal(false);
       setPassword("");
       setAccountName("");
@@ -79,6 +80,8 @@ const Dashboard = () => {
       setPasswords([...passwords, newPassword]); // Add the new password to the passwords state
       // console.log("Password added successfully.");
       toast.success("Password added successfully!"); // Show a success toast notification
+
+      fetchPasswords();
     } catch (error) {
       console.log("Error adding password:", error);
     }
@@ -86,6 +89,13 @@ const Dashboard = () => {
 
   const handleEdit = async () => {
     //edit req logic here
+    console.log("selectedPassword:", selectedPassword);
+    console.log("selectedPassword._id:", selectedPassword?._id);
+
+    if (!selectedPassword || !selectedPassword._id) {
+      console.error("Selected password or its ID is missing.");
+      return;
+    }
     try {
       const updatedPassword = {
         accountName,
@@ -94,8 +104,8 @@ const Dashboard = () => {
         url,
         category,
       };
-      await axios.patch(
-        `/api/passwords/${selectedPassword._id}`,
+      await axiosInstance.patch(
+        `/passwords/${selectedPassword._id}`,
         updatedPassword
       );
       setOpenEditModal(false);
@@ -114,6 +124,8 @@ const Dashboard = () => {
       setPassword("");
       setUrl("");
       setCategory("");
+
+      fetchPasswords();
     } catch (error) {
       console.error("Error updating password:", error);
     }
@@ -124,7 +136,7 @@ const Dashboard = () => {
     if (!passwordToDelete) return; // Guard clause if no ID is set
     try {
       // Make DELETE request to the backend API
-      await axios.delete(`/api/passwords/${passwordToDelete}`);
+      await axiosInstance.delete(`/passwords/${passwordToDelete}`);
 
       // Update the passwords state by filtering out the deleted password
       setPasswords((prevPasswords) =>
@@ -136,6 +148,8 @@ const Dashboard = () => {
       setPasswordToDelete(null); // Reset the password ID
 
       toast.success("Password deleted successfully.");
+
+      fetchPasswords();
     } catch (error) {
       console.error("Error deleting password: ", error);
     }

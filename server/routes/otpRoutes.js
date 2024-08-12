@@ -1,10 +1,12 @@
 import express from "express";
 import crypto from "crypto";
 import User from "../models/userModel.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
+import { sendOtpToEmail } from "../utility/emailService.js";
 
 const router = express.Router();
 
-router.post("/send-otp", async (req, res) => {
+router.post("/send-otp", authenticateToken, async (req, res) => {
   const { email } = req.body;
 
   const otp = crypto.randomInt(100000, 999999).toString();
@@ -22,7 +24,7 @@ router.post("/send-otp", async (req, res) => {
     await user.save();
 
     // Send OTP to user's email (implement your email sending logic)
-    // sendOtpToEmail(email, otp);
+    await sendOtpToEmail(email, otp);
 
     res.json({ message: "OTP sent successfully", otp, success: true });
     console.log(otp);
@@ -31,7 +33,7 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-router.post("/verify-otp", async (req, res) => {
+router.post("/verify-otp", authenticateToken, async (req, res) => {
   const { email, otp } = req.body;
 
   try {
@@ -64,7 +66,7 @@ router.post("/verify-otp", async (req, res) => {
 });
 
 //need to modify for reset password functionality
-router.post("/resetpass-otp", async (req, res) => {
+router.post("/resetpass-otp", authenticateToken, async (req, res) => {
   const { email } = req.body;
 
   const otp = crypto.randomInt(100000, 999999).toString();

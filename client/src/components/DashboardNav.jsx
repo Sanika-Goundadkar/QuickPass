@@ -14,6 +14,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
 
   const handleLogout = () => {
     // Clear user data from local storage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("userID");
     localStorage.removeItem("email");
     localStorage.removeItem("token"); // If you are using a token for authentication

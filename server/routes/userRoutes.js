@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import Password from "../models/passwordsModel.js";
 import SecurityQuestions from "../models/securityQuestionsModel.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -22,11 +24,41 @@ router.post("/register", async (req, res) => {
     // req.body.password = req.body.password;
     const user = new User(req.body);
     await user.save();
+
+    // Generate tokens
+    // const accessToken = user.generateAccessToken();
+    // const refreshToken = user.generateRefreshToken();
+
+    const accessToken = jwt.sign(
+      { userId: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+      }
+    );
+
+    console.log(accessToken);
+    console.log(refreshToken);
+
+    // Optionally, you might want to store the refresh token in a database or associated with the user
+
     return res.status(200).send({
       message: "User registered successfully",
       success: true,
-      user: user,
-      id: user.id,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      accessToken,
+      refreshToken,
     });
   } catch (error) {
     console.log(error);
@@ -61,17 +93,42 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    // Handle successful login (e.g., proceed to TOTP authentication)
-    res
-      .status(200)
-      .json({ message: "Login successful", success: true, userId: user._id });
+    // Handle successful login
+
+    // Generate tokens using the methods in the user model
+    const accessToken = jwt.sign(
+      { userId: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+      }
+    );
+
+    // Optionally store the refresh token in the database
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.status(200).json({
+      message: "Login successful",
+      success: true,
+      userId: user._id,
+      accessToken,
+      refreshToken,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error in Login API" });
   }
 });
 
-router.patch("/updateuser/:id", async (req, res) => {
+router.patch("/updateuser/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -104,7 +161,33 @@ router.patch("/updateuser/:id", async (req, res) => {
   }
 });
 
-router.get("/user/:id", async (req, res) => {
+router.post("/update-password", async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify old password
+    const isMatch = await user.comparePassword(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    // Hash new password and update it
+    // const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating password" });
+  }
+});
+
+router.get("/user/:id", authenticateToken, async (req, res) => {
   // route to get user's details
   try {
     const { id } = req.params;
@@ -119,7 +202,7 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-router.delete("/deleteuser/:id", async (req, res) => {
+router.delete("/deleteuser/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -138,12 +221,10 @@ router.delete("/deleteuser/:id", async (req, res) => {
     // Delete the user
     await User.findByIdAndDelete(id);
 
-    res
-      .status(200)
-      .json({
-        message: "User and associated data deleted successfully",
-        statusbar: "success",
-      });
+    res.status(200).json({
+      message: "User and associated data deleted successfully",
+      statusbar: "success",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

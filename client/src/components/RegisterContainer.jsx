@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import BackButton from "./BackButton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
 
 const RegisterContainer = () => {
   const [name, setName] = useState("");
@@ -19,7 +20,7 @@ const RegisterContainer = () => {
     setError("");
 
     try {
-      const response = await axios.post("/api/register", {
+      const response = await axiosInstance.post("/register", {
         name,
         email,
         password,
@@ -29,14 +30,18 @@ const RegisterContainer = () => {
         // Handle successful registration (e.g., show success message or redirect)
         localStorage.setItem("email", email);
         console.log("Registration successful:", response.data);
+        localStorage.setItem("userID", response.data.user.id);
+
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+
         alert("Registration successful!");
         localStorage.getItem("email", email);
-        localStorage.setItem("userID", response.data.id);
 
         try {
           const userID = localStorage.getItem("userID");
           console.log(userID);
-          const otpResponse = await axios.post("/api/send-otp", {
+          const otpResponse = await axiosInstance.post("/send-otp", {
             email,
           });
           // const id = otpResponse.data.id;
@@ -49,11 +54,8 @@ const RegisterContainer = () => {
             // window.location.replace("/otp");
           } else {
             setError("Failed to send OTP");
-            const deleteUserResponse = await axios.post(
-              "/api/deleteuser/userID",
-              {
-                email,
-              }
+            const deleteUserResponse = await axiosInstance.post(
+              "/deleteuser/userID"
             );
             console.log("User deleted", deleteUserResponse);
           }

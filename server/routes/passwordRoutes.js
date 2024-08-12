@@ -1,9 +1,10 @@
 import express from "express";
 import passwordsModel from "../models/passwordsModel.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/passwords", async (req, res) => {
+router.post("/passwords", authenticateToken, async (req, res) => {
   console.log(req.body);
   try {
     const newPassword = new passwordsModel(req.body);
@@ -18,7 +19,7 @@ router.post("/passwords", async (req, res) => {
   }
 });
 
-router.patch("/passwords/:id", async (req, res) => {
+router.patch("/passwords/:id", authenticateToken, async (req, res) => {
   console.log(req.body);
   try {
     const updatedPassword = await passwordsModel.findByIdAndUpdate(
@@ -37,7 +38,7 @@ router.patch("/passwords/:id", async (req, res) => {
   }
 });
 
-router.get("/passwords", async (req, res) => {
+router.get("/passwords", authenticateToken, async (req, res) => {
   // route to get all the passwords of logged in user
   try {
     const userId = req.query.userID;
@@ -60,7 +61,7 @@ router.get("/passwords", async (req, res) => {
   }
 });
 
-router.delete("/passwords/:id", async (req, res) => {
+router.delete("/passwords/:id", authenticateToken, async (req, res) => {
   console.log(req.params);
   try {
     const { id } = req.params;

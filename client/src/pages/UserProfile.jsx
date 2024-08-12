@@ -4,6 +4,7 @@ import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
 
 const UserProfile = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -26,7 +27,7 @@ const UserProfile = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/api/user/${userID}`);
+        const response = await axiosInstance.get(`/user/${userID}`);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -44,7 +45,7 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`/api/updateuser/${userID}`, userData);
+      await axiosInstance.patch(`/updateuser/${userID}`, userData);
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -55,7 +56,7 @@ const UserProfile = () => {
   const handleDelete = async () => {
     const userID = localStorage.getItem("userID");
     try {
-      const response = await axios.delete(`/api/deleteuser/${userID}`);
+      const response = await axiosInstance.delete(`/deleteuser/${userID}`);
       if (response.data.success) {
         toast.success("Account deleted successfully!");
         setOpenDeleteModal(false);

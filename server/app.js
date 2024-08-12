@@ -5,6 +5,7 @@ import userRoutes from "./routes/userRoutes.js";
 import passwordRoutes from "./routes/passwordRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
 import securityQuestionRoutes from "./routes/securityQuestionRoutes.js";
+import tokenRoutes from "./routes/tokenRoutes.js";
 import bodyParser from "body-parser";
 
 import cors from "cors";
@@ -22,6 +23,7 @@ app.use("/api/", userRoutes);
 app.use("/api/", passwordRoutes);
 app.use("/api/", otpRoutes);
 app.use("/api/", securityQuestionRoutes);
+app.use("/api/", tokenRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import Link from react-router-dom
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
+
 
 const SecurityQuestions = () => {
   const userID = localStorage.getItem("userID");
@@ -28,7 +30,7 @@ const SecurityQuestions = () => {
     setIsLoading(true);
     // Add security question validation here
     try {
-      const response = await axios.post("/api/verify-security-questions", {
+      const response = await axiosInstance.post("/verify-security-questions", {
         questionOne,
         questionTwo,
         questionThree,

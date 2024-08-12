@@ -25,6 +25,9 @@ const userSchema = new Schema(
       type: Date,
       default: null,
     },
+    refreshToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -44,7 +47,7 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// //Generating the JWT access token
+//Generating the JWT access token
 // userSchema.methods.generateAccessToken = function () {
 //   jwt.sign(
 //     {
@@ -70,12 +73,6 @@ userSchema.methods.comparePassword = async function (password) {
 //       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
 //     }
 //   );
-// };
-
-// // Compare the entered password with the stored password
-// userSchema.methods.comparePassword = async function (enteredPassword) {
-//   // Directly compare the passwords as plain text
-//   return enteredPassword === this.password;
 // };
 
 export default model("User", userSchema); //User is the name of collection(converted to 'uses'-> all lowercase & plural)

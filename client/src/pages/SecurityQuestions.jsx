@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
 
 const SecurityQuestions = () => {
   const [questionOne, setQuestionOne] = useState("");
@@ -29,7 +30,7 @@ const SecurityQuestions = () => {
     setIsLoading(true);
     // Add security question validation here
     try {
-      const response = await axios.post("/api/security-questions", {
+      const response = await axiosInstance.post("/security-questions", {
         questionOne,
         questionTwo,
         questionThree,
@@ -40,7 +41,7 @@ const SecurityQuestions = () => {
       if (response.data.success) {
         toast.success("Registration successful!");
         console.log("Questions saved successfully!", response);
-        navigate("/login");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log("Error sending the request for security questions", error);

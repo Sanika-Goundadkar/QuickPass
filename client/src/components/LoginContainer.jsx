@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackButton from "./BackButton";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../api/axiosInstance.js";
+
 // import { set } from "mongoose";
 
 // axios.defaults.baseURL = "http://localhost:5000"; // Replace with your backend server URL
@@ -27,23 +31,26 @@ const LoginContainer = () => {
 
       // Handling successful login (Redirecting to OTP authentication)
       if (loginResponse.data.success) {
-        console.log("Login successful:", loginResponse.data);
+        // console.log("Login successful:", loginResponse.data);
         localStorage.setItem("userID", loginResponse.data.userId);
+        // Save tokens after login or registration
+        localStorage.setItem("accessToken", loginResponse.data.accessToken);
+        localStorage.setItem("refreshToken", loginResponse.data.refreshToken);
 
-        alert("Login successful");
+        // alert("Login successful");
         localStorage.setItem("email", email); // Store email in local storage
         console.log(email);
         const userID = localStorage.getItem("userID");
         console.log(userID);
 
         try {
-          const otpResponse = await axios.post("/api/send-otp", {
+          const otpResponse = await axiosInstance.post("/send-otp", {
             email,
           });
 
           if (otpResponse.data.success) {
             console.log("OTP sent successful:", otpResponse.data);
-            alert("OTP sent successful");
+            toast.success("OTP sent successful");
             navigate("/otp");
             console.log("redirecting to OTP authentication");
 

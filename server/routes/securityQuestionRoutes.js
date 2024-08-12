@@ -1,9 +1,10 @@
 import express from "express";
 import securityQuestionsModel from "../models/securityQuestionsModel.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/security-questions", async (req, res) => {
+router.post("/security-questions", authenticateToken, async (req, res) => {
   console.log(req.body);
   try {
     // const newQuestion = new securityQuestionsModel(req.body);
@@ -35,7 +36,7 @@ router.post("/security-questions", async (req, res) => {
   }
 });
 
-router.post("/verify-security-questions", async (req, res) => {
+router.post("/verify-security-questions", authenticateToken, async (req, res) => {
   const { questionOne, questionTwo, questionThree, questionFour, userID } =
     req.body;
   // const id = req.params;
@@ -71,7 +72,7 @@ router.post("/verify-security-questions", async (req, res) => {
   }
 });
 
-router.delete("/delete-security-questions/:userID", async (req, res) => {
+router.delete("/delete-security-questions/:userID", authenticateToken, async (req, res) => {
   const { userID } = req.params;
 
   try {
