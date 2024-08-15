@@ -15,6 +15,10 @@ const passwordSchema = new Schema(
       type: String,
       required: true,
     },
+    iv: {
+      type: String,
+      required: true,
+    },
     url: {
       type: String,
       // required: true,

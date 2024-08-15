@@ -7,7 +7,6 @@ import otpRoutes from "./routes/otpRoutes.js";
 import securityQuestionRoutes from "./routes/securityQuestionRoutes.js";
 import tokenRoutes from "./routes/tokenRoutes.js";
 import bodyParser from "body-parser";
-
 import cors from "cors";
 
 dotenv.config();

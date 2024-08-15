@@ -16,7 +16,6 @@ const Dashboard = () => {
   const [url, setUrl] = useState([]);
   const [category, setCategory] = useState([]);
   const [selectedPassword, setSelectedPassword] = useState(null);
-
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [passwordToDelete, setPasswordToDelete] = useState(null);
   const [noPasswords, setNoPasswords] = useState(false);
@@ -25,7 +24,7 @@ const Dashboard = () => {
 
   const [searchTerm, setSearchTerm] = useState(""); // Initialize with empty string
 
-  console.log("userID: ", userID);
+  // console.log("userID: ", userID);
 
   const fetchPasswords = async () => {
     const userID = localStorage.getItem("userID");
@@ -61,13 +60,15 @@ const Dashboard = () => {
   const handleAddPassword = async () => {
     //add password req logic here
     try {
+      console.log(userID);
+
       const newPassword = {
         accountName,
         userName,
         password,
         url,
         category,
-        createdBy: userID,
+        userID,
       };
       await axiosInstance.post("/passwords", newPassword);
       setOpenAddModal(false);

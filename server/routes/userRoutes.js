@@ -187,6 +187,41 @@ router.post("/update-password", async (req, res) => {
   }
 });
 
+router.post(
+  "/change-master-password/:id",
+  authenticateToken,
+  async (req, res) => {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Verify old password
+      const isMatch = await user.comparePassword(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Old password is incorrect" });
+      }
+
+      // Save new password
+      user.password = newPassword;
+      await user.save();
+      res.json({
+        message: "Master password updated successfully",
+        success: true,
+      });
+    } catch (error) {
+      res.json({
+        message: "Error updating master password",
+        success: false,
+      });
+      console.log("Error updating master password", error);
+    }
+  }
+);
+
 router.post("/reset-password", authenticateToken, async (req, res) => {
   const { newPassword } = req.body;
   const { userId } = req.user; // Extract userId from the token payload

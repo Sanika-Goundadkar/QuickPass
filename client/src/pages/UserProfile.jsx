@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
@@ -9,6 +8,11 @@ import axiosInstance from "../api/axiosInstance.js";
 const UserProfile = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const userID = localStorage.getItem("userID");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -53,7 +57,43 @@ const UserProfile = () => {
     }
   };
 
-  const handleChangeMasterPassword = async (e) => {};
+  const handleChangeMasterPassword = async (e) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      setError("New passwords do not match");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await axiosInstance.post(
+        `/change-master-password/${userID}`,
+        {
+          oldPassword,
+          newPassword,
+        }
+      );
+      console.log(response);
+
+      if (response.data.success) {
+        toast.success("Password changed successfully!");
+        setIsLoading(false);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch (error) {
+      console.log("Error updating password:", error);
+      setError(error.response?.data?.message || "Error updating pasword");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setIsLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     const userID = localStorage.getItem("userID");
@@ -87,6 +127,10 @@ const UserProfile = () => {
               Profile
             </h1>
           </div>
+          <center>
+            {error && <p className="text-red-500 mb-4">{error.toString()}</p>}
+          </center>
+          {/* Profile Section */}
           <form onSubmit={handleSubmit} className="space-y-4 my-3">
             <div>
               <h3 className="py-2 text-xl text-orange-500">
@@ -111,8 +155,6 @@ const UserProfile = () => {
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
-            {/* Add other input fields as needed */}
             <div className="flex justify-center mt-4">
               <button
                 type="submit"
@@ -123,7 +165,7 @@ const UserProfile = () => {
             </div>
           </form>
 
-          {/* Changing the Master Password */}
+          {/*Master Password Section*/}
           <form
             onSubmit={handleChangeMasterPassword}
             className="space-y-4 border-t border-spacing-4 border-gray-500 my-3"
@@ -133,16 +175,16 @@ const UserProfile = () => {
                 Change Master Password :
               </h3>
             </div>
-            <div></div>
             <div>
               <label className="block mb-2 text-sm font-medium">
                 Old Password:
               </label>
               <input
                 type="password"
-                name="password"
-                // onChange={handleChange}
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
             <div>
@@ -151,18 +193,33 @@ const UserProfile = () => {
               </label>
               <input
                 type="password"
-                name="password"
-                // onChange={handleChange}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
-            {/* Add other input fields as needed */}
+            <div>
+              <label className="block mb-2 text-sm font-medium">
+                Confirm New Password:
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
             <div className="flex justify-center mt-4">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-orange-500 to-orange-800 text-white my-4 py-2 px-4 rounded-md w-full md:w-auto"
+                className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-4 py-2 px-4 rounded-md w-full md:w-auto ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={isLoading}
               >
-                Change Password
+                {isLoading ? "Changing Password..." : "Change Password"}
               </button>
             </div>
           </form>
@@ -182,6 +239,7 @@ const UserProfile = () => {
         </div>
       </div>
 
+      {/* Delete User Modal */}
       <Modal
         show={openDeleteModal}
         size="md"
