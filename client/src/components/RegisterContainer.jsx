@@ -76,7 +76,6 @@ const RegisterContainer = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <BackButton />
       <div className="max-w-md w-full bg-gray-800 shadow-md rounded-lg p-8">
         <div className="flex flex-col items-center justify-between">
           <h3 className="text-2xl my-1">Register to</h3>

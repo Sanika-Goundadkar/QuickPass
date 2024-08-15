@@ -1,5 +1,6 @@
 import express from "express";
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import { sendOtpToEmail } from "../utility/emailService.js";
@@ -66,7 +67,7 @@ router.post("/verify-otp", authenticateToken, async (req, res) => {
 });
 
 //need to modify for reset password functionality
-router.post("/resetpass-otp", authenticateToken, async (req, res) => {
+router.post("/forgot-password-otp", async (req, res) => {
   const { email } = req.body;
 
   const otp = crypto.randomInt(100000, 999999).toString();
@@ -86,9 +87,59 @@ router.post("/resetpass-otp", authenticateToken, async (req, res) => {
     // Send OTP to user's email (implement your email sending logic)
     // sendOtpToEmail(email, otp);
 
-    res.json({ message: "OTP sent successfully" });
+    res.json({
+      message: "OTP sent successfully",
+      success: true,
+      userID: user._id,
+    });
+    console.log(otp);
   } catch (error) {
     res.status(500).json({ message: "Error generating OTP" });
+  }
+});
+
+router.post("/verify-forgot-password-otp", async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the OTP is invalid or is expired
+    if (user.otp !== otp || user.otpExpiresAt < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // OTP is valid, so clear it from the user record
+    user.otp = null;
+    user.otpExpiresAt = null;
+    await user.save();
+
+    // Generate access and refresh tokens
+    const accessToken = jwt.sign(
+      { userId: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    );
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
+
+    // Return success response with tokens
+    res.json({
+      message: "OTP verified successfully",
+      success: true,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    res.status(500).json({ message: "Error verifying OTP" });
   }
 });
 

@@ -12,6 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 import OtpVerification from "./pages/Otp.jsx";
 import RegisterOtpVerification from "./pages/RegisterOtp.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import ForgotPasswordOtp from "./pages/ForgotPasswordOtp.jsx";
+import VerifyForgotPasswordSecurityQuestions from "./pages/VerifyForgotPasswordSecurityQuestions.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import SecurityQuestions from "./pages/SecurityQuestions.jsx";
 import VerifySecurityQuestions from "./pages/VerifySecurityQuestions.jsx";
 import Dashboard from "./pages/Dashboard";
@@ -28,6 +31,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/forgot-password-otp" element={<ForgotPasswordOtp />} />
           <Route exact path="/about" element={<About />} />
           <Route exact path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
@@ -41,6 +45,11 @@ const App = () => {
             path="/verify-security-questions"
             element={<VerifySecurityQuestions />}
           />
+          <Route
+            path="/verify-forgot-password-security-questions"
+            element={<VerifyForgotPasswordSecurityQuestions />}
+          />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<UserProfile />} />
         </Routes>

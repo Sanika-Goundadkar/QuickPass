@@ -36,61 +36,108 @@ router.post("/security-questions", authenticateToken, async (req, res) => {
   }
 });
 
-router.post("/verify-security-questions", authenticateToken, async (req, res) => {
-  const { questionOne, questionTwo, questionThree, questionFour, userID } =
-    req.body;
-  // const id = req.params;
-  try {
-    const securityQuestions = await securityQuestionsModel.findOne({
-      belongsTo: userID,
-      // userID,
-    });
-    console.log(securityQuestions);
-
-    if (!securityQuestions) {
-      return res.status(404).json({ error: "Security questions not found" });
-    }
-
-    const isMatchOne = questionOne === securityQuestions.questionOne;
-    const isMatchTwo = questionTwo === securityQuestions.questionTwo;
-    const isMatchThree = questionThree === securityQuestions.questionThree;
-    const isMatchFour = questionFour === securityQuestions.questionFour;
-
-    if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
-      res.status(200).json({
-        message: "Security questions verified successfully",
-        success: true,
+router.post(
+  "/verify-security-questions",
+  authenticateToken,
+  async (req, res) => {
+    const { questionOne, questionTwo, questionThree, questionFour, userID } =
+      req.body;
+    // const id = req.params;
+    try {
+      const securityQuestions = await securityQuestionsModel.findOne({
+        belongsTo: userID,
+        // userID,
       });
-    } else {
-      res.status(400).json({
-        success: false,
-        error: "Security answers are incorrect",
+      console.log(securityQuestions);
+
+      if (!securityQuestions) {
+        return res.status(404).json({ error: "Security questions not found" });
+      }
+
+      const isMatchOne = questionOne === securityQuestions.questionOne;
+      const isMatchTwo = questionTwo === securityQuestions.questionTwo;
+      const isMatchThree = questionThree === securityQuestions.questionThree;
+      const isMatchFour = questionFour === securityQuestions.questionFour;
+
+      if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
+        res.status(200).json({
+          message: "Security questions verified successfully",
+          success: true,
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: "Security answers are incorrect",
+        });
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+);
+router.post(
+  "/verify-forgotpassword-security-questions",
+  authenticateToken,
+  async (req, res) => {
+    const { questionOne, questionTwo, questionThree, questionFour, userID } =
+      req.body;
+    // const id = req.params;
+    try {
+      const securityQuestions = await securityQuestionsModel.findOne({
+        belongsTo: userID,
+        // userID,
       });
+      console.log(securityQuestions);
+
+      if (!securityQuestions) {
+        return res.status(404).json({ error: "Security questions not found" });
+      }
+
+      const isMatchOne = questionOne === securityQuestions.questionOne;
+      const isMatchTwo = questionTwo === securityQuestions.questionTwo;
+      const isMatchThree = questionThree === securityQuestions.questionThree;
+      const isMatchFour = questionFour === securityQuestions.questionFour;
+
+      if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
+        res.status(200).json({
+          message: "Security questions verified successfully",
+          success: true,
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: "Security answers are incorrect",
+        });
+      }
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ error: error.message });
   }
-});
+);
 
-router.delete("/delete-security-questions/:userID", authenticateToken, async (req, res) => {
-  const { userID } = req.params;
+router.delete(
+  "/delete-security-questions/:userID",
+  authenticateToken,
+  async (req, res) => {
+    const { userID } = req.params;
 
-  try {
-    // Find and delete the security questions associated with the user
-    const result = await securityQuestionsModel.findOneAndDelete({
-      belongsTo: userID,
-    });
+    try {
+      // Find and delete the security questions associated with the user
+      const result = await securityQuestionsModel.findOneAndDelete({
+        belongsTo: userID,
+      });
 
-    if (!result) {
-      return res.status(404).json({ error: "Security questions not found" });
+      if (!result) {
+        return res.status(404).json({ error: "Security questions not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Security questions deleted successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
-
-    return res
-      .status(200)
-      .json({ message: "Security questions deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
   }
-});
+);
 
 export default router;

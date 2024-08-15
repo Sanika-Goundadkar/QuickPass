@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiSearch, FiUser, FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Menu,
   MenuButton,
@@ -19,6 +21,9 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
     localStorage.removeItem("userID");
     localStorage.removeItem("email");
     localStorage.removeItem("token"); // If you are using a token for authentication
+
+    console.log("Logged out Successfully!");
+    toast.success("Logged out Successfully!");
 
     // Redirect to the login page
     window.location.href = "/login"; // Adjust the path as needed
@@ -170,7 +175,7 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                   <MenuItem>
                     {({ active }) => (
                       <Link
-                        to="/logout"
+                        onClick={handleLogout}
                         className={`${
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}

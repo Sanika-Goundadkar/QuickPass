@@ -187,6 +187,34 @@ router.post("/update-password", async (req, res) => {
   }
 });
 
+router.post("/reset-password", authenticateToken, async (req, res) => {
+  const { newPassword } = req.body;
+  const { userId } = req.user; // Extract userId from the token payload
+
+  if (!newPassword) {
+    return res.status(400).json({ message: "New password is required" });
+  }
+
+  try {
+    // Hash the new password
+    // const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    // Find the user and update the password
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Password reset successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ message: "Error resetting password" });
+    console.log("Error in reset-password api", error);
+  }
+});
+
 router.get("/user/:id", authenticateToken, async (req, res) => {
   // route to get user's details
   try {

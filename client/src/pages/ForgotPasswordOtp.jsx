@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../api/axiosInstance.js";
 
-const RegisterOtpVerification = () => {
+const ForgotPasswordOtp = () => {
   const email = localStorage.getItem("email");
+
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -27,22 +27,30 @@ const RegisterOtpVerification = () => {
 
     // Add OTP verification logic here
     try {
-      const response = await axiosInstance.post("/verify-otp", {
+      console.log("email got from localStorage", email);
+
+      const response = await axios.post("/api/verify-forgot-password-otp", {
         email,
         otp,
       });
+      console.log(response);
+
       if (response.data.success) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         alert("OTP verified successfully!");
-        localStorage.removeItem(email);
-        console.log("Before removing email: ", localStorage.getItem("email"));
-        console.log("After removing email: ", localStorage.getItem("email"));
-        navigate("/security-questions");
+
+        // console.log("Before removing email: ", localStorage.getItem("email"));
+        // localStorage.removeItem(email);
+        // console.log("After removing email: ", localStorage.getItem("email"));
+
+        navigate("/verify-forgot-password-security-questions");
       } else {
         setError("Invalid OTP");
       }
     } catch (error) {
       console.log(error);
-      setError(response.data.message, "Error verifying OTP");
+      setError(error.response?.data?.message || "Error verifying OTP");
     }
   };
 
@@ -79,4 +87,4 @@ const RegisterOtpVerification = () => {
   );
 };
 
-export default RegisterOtpVerification;
+export default ForgotPasswordOtp;

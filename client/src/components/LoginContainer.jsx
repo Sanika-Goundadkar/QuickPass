@@ -75,7 +75,6 @@ const LoginContainer = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <BackButton />
       <div className="max-w-md w-full flex flex-col bg-gray-800 shadow-md rounded-lg p-8">
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         <div className="flex flex-col items-center justify-between">

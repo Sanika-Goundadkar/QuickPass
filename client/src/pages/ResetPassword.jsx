@@ -1,42 +1,42 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
+    try {
+      const response = await axios.post("/api/forgot-password-otp", { email });
+      localStorage.setItem("email", email);
+      console.log("email set to localStorage", email);
 
-    // Replace with your API endpoint
-    const response = await fetch("/api/update-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, oldPassword, newPassword }),
-    });
+      console.log(response);
 
-    const data = await response.json();
+      setEmail("");
+      if (response.status === 200) {
+        localStorage.setItem("userID", response.data.userID);
+        //redirecting to the Set New Password page
+        toast.success("OTP sent successfully!");
 
-    setEmail("");
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    if (response.ok) {
-      alert("Password updated successfully!");
-    } else {
-      alert(data.message || "Error updating password.");
+        navigate("/forgot-password-otp");
+      }
+    } catch (error) {
+      console.log("Error sending reset password OTP", error);
+      setError(error.response.data.message || "Error sending OTP");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="bg-gray-800 p-6 rounded-lg w-80 mx-auto text-center">
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         <div className="flex flex-col items-center">
           <h3 className="text-2xl my-1">Reset</h3>
           <h1 className="text-4xl my-1 font-bold mb-6 text-center bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text tracking-wide">
@@ -49,46 +49,17 @@ const ResetPassword = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              placeholder="Old password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="New password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
+              placeholder="Enter registered email"
               className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
               required
             />
           </div>
           <button
             type="submit"
+            title="Send OTP to registered email"
             className="bg-gradient-to-r from-orange-500 to-orange-800 text-white py-2 px-4 rounded-md"
           >
-            Update Password
+            Send OTP
           </button>
         </form>
       </div>

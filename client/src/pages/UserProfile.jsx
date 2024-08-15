@@ -53,6 +53,8 @@ const UserProfile = () => {
     }
   };
 
+  const handleChangeMasterPassword = async (e) => {};
+
   const handleDelete = async () => {
     const userID = localStorage.getItem("userID");
     try {
@@ -85,8 +87,11 @@ const UserProfile = () => {
               Profile
             </h1>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 my-3">
             <div>
+              <h3 className="py-2 text-xl text-orange-500">
+                User Profile Details :
+              </h3>
               <label className="block mb-2 text-sm font-medium">Name:</label>
               <input
                 type="text"
@@ -106,18 +111,7 @@ const UserProfile = () => {
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">
-                Password:
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleChange}
-                className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+
             {/* Add other input fields as needed */}
             <div className="flex justify-center mt-4">
               <button
@@ -128,13 +122,58 @@ const UserProfile = () => {
               </button>
             </div>
           </form>
+
+          {/* Changing the Master Password */}
+          <form
+            onSubmit={handleChangeMasterPassword}
+            className="space-y-4 border-t border-spacing-4 border-gray-500 my-3"
+          >
+            <div>
+              <h3 className="py-2 text-xl text-orange-500">
+                Change Master Password :
+              </h3>
+            </div>
+            <div></div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">
+                Old Password:
+              </label>
+              <input
+                type="password"
+                name="password"
+                // onChange={handleChange}
+                className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">
+                New Password:
+              </label>
+              <input
+                type="password"
+                name="password"
+                // onChange={handleChange}
+                className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            {/* Add other input fields as needed */}
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-orange-500 to-orange-800 text-white my-4 py-2 px-4 rounded-md w-full md:w-auto"
+              >
+                Change Password
+              </button>
+            </div>
+          </form>
+
           <div className="flex flex-col border-t border-spacing-4 border-gray-500 items-center justify-center py-2">
             <h2 className="text-xl py-3 sm:text-2xl  text-red-800 font-semibold mb-4 text-center">
               Danger Zone
             </h2>
             <button
               type=""
-              className="bg-[#9b1c1c] text-white my-4 py-2 px-4 rounded-md  md:w-auto"
+              className="bg-[#9b1c1c] text-white py-2 px-4 rounded-md  md:w-auto"
               onClick={() => setOpenDeleteModal(true)}
             >
               Delete my account
@@ -154,9 +193,8 @@ const UserProfile = () => {
           <div className="text-center ">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete your QuickPass account? Remember
-              that you can no longer access your account. This action cannot be
-              undone.
+              Are you sure you want to delete your QuickPass account This action
+              will delete all the data & it cannot be undone.
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={() => handleDelete()}>
