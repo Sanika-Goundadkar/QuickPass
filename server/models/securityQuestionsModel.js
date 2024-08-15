@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 
 const securityQuestionSchema = new Schema(
   {
@@ -27,5 +28,19 @@ const securityQuestionSchema = new Schema(
     timestamps: true,
   }
 );
+
+securityQuestionSchema.methods.compareQuestion = function (
+  questionOne,
+  questionTwo,
+  questionThree,
+  questionFour
+) {
+  const isMatch =
+    bcrypt.compareSync(questionOne, this.questionOne) &&
+    bcrypt.compareSync(questionTwo, this.questionTwo) &&
+    bcrypt.compareSync(questionThree, this.questionThree) &&
+    bcrypt.compareSync(questionFour, this.questionFour);
+  return isMatch;
+};
 
 export default model("SecurityQuestions", securityQuestionSchema);

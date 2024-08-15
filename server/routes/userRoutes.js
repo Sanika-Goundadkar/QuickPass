@@ -48,6 +48,8 @@ router.post("/register", async (req, res) => {
     console.log(refreshToken);
 
     // Optionally, you might want to store the refresh token in a database or associated with the user
+    user.refreshToken = refreshToken;
+    await user.save();
 
     return res.status(200).send({
       message: "User registered successfully",

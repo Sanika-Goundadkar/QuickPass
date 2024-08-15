@@ -90,7 +90,7 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                       <Link
                         to="/profile"
                         className={`${
-                          active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiUser className="mr-2" size={18} />
@@ -103,7 +103,7 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                       <button
                         onClick={handleLogout}
                         className={`${
-                          active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiLogOut className="mr-2" size={18} />
@@ -164,7 +164,7 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                       <Link
                         to="/profile"
                         className={`${
-                          active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiUser className="mr-2" size={18} />
@@ -177,7 +177,7 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                       <Link
                         onClick={handleLogout}
                         className={`${
-                          active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiLogOut className="mr-2" size={18} />

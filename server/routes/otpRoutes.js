@@ -27,7 +27,7 @@ router.post("/send-otp", authenticateToken, async (req, res) => {
     // Send OTP to user's email (implement your email sending logic)
     await sendOtpToEmail(email, otp);
 
-    res.json({ message: "OTP sent successfully", otp, success: true });
+    res.json({ message: "OTP sent successfully", success: true });
     console.log(otp);
   } catch (error) {
     res.status(500).json({ message: "Error generating OTP" });
