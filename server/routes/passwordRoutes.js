@@ -96,6 +96,7 @@ router.get("/passwords", authenticateToken, async (req, res) => {
       success: true,
       passwords: decryptedPasswords,
     });
+    
   } catch (error) {
     res.status(500).json({
       success: false,

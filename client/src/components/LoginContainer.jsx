@@ -54,7 +54,7 @@ const LoginContainer = () => {
             navigate("/otp");
             console.log("redirecting to OTP authentication");
 
-            // window.location.replace("/otp");
+            window.location.replace("/otp");
           } else {
             setError("Failed to send OTP");
           }

@@ -29,17 +29,26 @@ const securityQuestionSchema = new Schema(
   }
 );
 
-securityQuestionSchema.methods.compareQuestion = function (
+securityQuestionSchema.pre("save", async function (next) {
+  this.questionOne = await bcrypt.hash(this.questionOne, 10);
+  this.questionTwo = await bcrypt.hash(this.questionTwo, 10);
+  this.questionThree = await bcrypt.hash(this.questionThree, 10);
+  this.questionFour = await bcrypt.hash(this.questionFour, 10);
+
+  next();
+});
+
+securityQuestionSchema.methods.compareQuestion = async function (
   questionOne,
   questionTwo,
   questionThree,
   questionFour
 ) {
   const isMatch =
-    bcrypt.compareSync(questionOne, this.questionOne) &&
-    bcrypt.compareSync(questionTwo, this.questionTwo) &&
-    bcrypt.compareSync(questionThree, this.questionThree) &&
-    bcrypt.compareSync(questionFour, this.questionFour);
+    (await bcrypt.compare(questionOne, this.questionOne)) &&
+    (await bcrypt.compare(questionTwo, this.questionTwo)) &&
+    (await bcrypt.compare(questionThree, this.questionThree)) &&
+    (await bcrypt.compare(questionFour, this.questionFour));
   return isMatch;
 };
 

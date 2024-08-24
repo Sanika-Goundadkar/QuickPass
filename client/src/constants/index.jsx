@@ -75,10 +75,3 @@ export const checklistItems = [
     description: "Update the profile details and master password easily.",
   },
 ];
-
-// export const footItems = [
-//   { label: "About", href: "#" },
-//   { label: "Contact", href: "#" },
-//   { label: "Privacy Polocy", href: "#" },
-//   { label: "Terms & Conditions", href: "#" },
-// ];
