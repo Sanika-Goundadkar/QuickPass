@@ -2,10 +2,13 @@
 
 import { ShieldCheck } from "lucide-react";
 import { Layers3 } from "lucide-react";
-import { WifiOff } from "lucide-react";
 import { MonitorSmartphone } from "lucide-react";
 import { Search } from "lucide-react";
 import { Database } from "lucide-react";
+import { Proportions } from "lucide-react";
+// import { Smartphone } from "lucide-react";
+// import { TabletSmartphone } from "lucide-react";
+// import { PanelTop } from "lucide-react";
 
 export const navItems = [
   { label: "Home", href: "/" },
@@ -21,14 +24,15 @@ export const features = [
   },
   {
     icon: <Layers3 />,
-    text: "3 Layers of Security",
+    text: "Multi-Layer Security",
     description:
-      "Secured with three layers of authentication,Master password, OTP, & Security Questions.",
+      "Secured with three layers of authentication, Master password, OTP, & Security Questions.",
   },
   {
-    icon: <WifiOff />,
-    text: "Access Offline",
-    description: "Access your vault even when offline once you are logged in.",
+    icon: <Proportions />,
+    text: "Responsive Design",
+    description:
+      "Access your password manager from any device, whether it's a desktop, tablet, or smartphone, with a seamless and consistent experience.",
   },
   {
     icon: <MonitorSmartphone />,
@@ -67,8 +71,7 @@ export const checklistItems = [
   },
   {
     title: "Password Retrieval",
-    description:
-      "Easily search and retrive specific password or account easily.",
+    description: "Easily search and retrive specific account easily.",
   },
   {
     title: "User Settings",

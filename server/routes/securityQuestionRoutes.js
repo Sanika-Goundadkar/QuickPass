@@ -65,8 +65,8 @@ router.post(
       // const isMatchThree = questionThree === securityQuestions.questionThree;
       // const isMatchFour = questionFour === securityQuestions.questionFour;
 
+      // if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
       if (isMatch) {
-        // if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
         res.status(200).json({
           message: "Security questions verified successfully",
           success: true,
@@ -100,12 +100,14 @@ router.post(
         return res.status(404).json({ error: "Security questions not found" });
       }
 
-      const isMatchOne = questionOne === securityQuestions.questionOne;
-      const isMatchTwo = questionTwo === securityQuestions.questionTwo;
-      const isMatchThree = questionThree === securityQuestions.questionThree;
-      const isMatchFour = questionFour === securityQuestions.questionFour;
+      const isMatch = await securityQuestions.compareQuestion(
+        questionOne,
+        questionTwo,
+        questionThree,
+        questionFour
+      );
 
-      if (isMatchOne && isMatchTwo && isMatchThree && isMatchFour) {
+      if (isMatch) {
         res.status(200).json({
           message: "Security questions verified successfully",
           success: true,

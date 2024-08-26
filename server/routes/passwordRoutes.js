@@ -77,11 +77,11 @@ router.get("/passwords", authenticateToken, async (req, res) => {
   // route to get all the passwords of logged in user
   try {
     const userId = req.query.userID;
-    console.log("Received userID:", userId);
+    // console.log("Received userID:", userId);
 
     // Fetch passwords from database
     const passwords = await passwordsModel.find({ createdBy: userId });
-    console.log("Passwords retrieved:", passwords);
+    // console.log("Passwords retrieved:", passwords);
 
     // Decrypt passwords
     const decryptedPasswords = passwords.map((password) => {
@@ -96,7 +96,6 @@ router.get("/passwords", authenticateToken, async (req, res) => {
       success: true,
       passwords: decryptedPasswords,
     });
-    
   } catch (error) {
     res.status(500).json({
       success: false,

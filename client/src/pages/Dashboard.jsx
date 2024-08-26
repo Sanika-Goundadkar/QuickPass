@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DashboardNav from "../components/DashboardNav";
 import { Button, Modal, Label, TextInput } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import axiosInstance from "../api/axiosInstance.js";
+import { Eye, EyeOff, Copy } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axiosInstance from "../api/axiosInstance.js";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  // const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [visiblePasswords, setVisiblePasswords] = useState({});
+
+
   const userID = localStorage.getItem("userID");
   const [passwords, setPasswords] = useState([]); //for fetching passwords
   const [accountName, setAccountName] = useState([]);
@@ -21,7 +28,6 @@ const Dashboard = () => {
   const [noPasswords, setNoPasswords] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState(""); // Initialize with empty string
 
   // console.log("userID: ", userID);
@@ -29,9 +35,9 @@ const Dashboard = () => {
   const fetchPasswords = async () => {
     const userID = localStorage.getItem("userID");
     if (!userID) {
-      alert("Please Authenticate to Access Data.");
-      // Redirect to login or show an error
-      window.location.href = "/login";
+      // alert("Please Authenticate to Access Data.");
+
+      navigate("/login", { replace: true });
       return null; // Prevent further execution of the component
     }
     try {
@@ -48,6 +54,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchPasswords();
   }, [userID]);
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -156,6 +163,36 @@ const Dashboard = () => {
     }
   };
 
+  const togglePasswordVisibility = (id) => {
+    // setIsPasswordVisible(!isPasswordVisible);
+
+    setVisiblePasswords((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id], // Toggle the specific password visibility
+    }));
+  };
+
+  const copyToClipboard = (password) => {
+    navigator.clipboard.writeText(password)
+      .then(() => {
+        toast.success("Password copied to clipboard!");
+      })
+      .catch((error) => {
+        console.error("Failed to copy password:", error);
+      });
+  };
+
+  const copyUsernameToClipboard = (username) => {
+    navigator.clipboard.writeText(username)
+      .then(() => {
+        toast.success("Username copied to clipboard!");
+      })
+      .catch((error) => {
+        console.error("Failed to copy username:", error);
+      });
+  };
+
+
   const openEditPasswordModal = (password) => {
     setSelectedPassword(password);
     setAccountName(password.accountName);
@@ -183,7 +220,7 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-center md:justify-end items-center w-full md:w-auto">
             <button
-              className="my-5 md:my-0 bg-gradient-to-r from-orange-500 to-orange-800 text-white h-min py-2 px-4 rounded-md"
+              className="my-5 md:my-0 bg-gradient-to-r hover:scale-105 from-orange-500 to-orange-800 text-white h-min py-2 px-4 rounded-md"
               title="Add password"
               onClick={() => setOpenAddModal(true)}
             >
@@ -200,7 +237,7 @@ const Dashboard = () => {
                 No saved passwords yet.
               </h2>
               <p className="text-sm sm:text-base md:text-lg text-gray-600 text-center">
-                Use the "Add Password" button to create new entries.
+                Click on <span className="text-red-500">Add Password</span> button to create new entries.
               </p>
             </div>
           )}
@@ -209,16 +246,34 @@ const Dashboard = () => {
           {filteredPasswords.map((password, index) => (
             <div
               key={password._id || index}
-              className="bg-gray-800 border bg-opacity-50 border-slate-950 shadow-lg rounded-2xl p-5 sm:p-6 md:p-8 lg:p-10 m-3"
+              className="bg-gray-800 border bg-opacity-50 border-slate-950 shadow-lg hover:bg-opacity-100 hover:scale-105 rounded-2xl p-5 sm:p-6 md:p-8 lg:p-10 m-3"
             >
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold pb-4 text-center">
                 {password.accountName}
               </h2>
               <p className="py-1 text-sm sm:text-base">
                 <strong>Username:&nbsp;</strong> {password.userName}
+                <span className=" cursor-pointer text-red-500"
+                  onClick={() => copyUsernameToClipboard(password.userName)}
+                >
+                  <Copy />
+                </span>
               </p>
               <p className="py-1 text-sm sm:text-base">
-                <strong>Password:&nbsp;</strong> {password.password}
+                <strong>Password:&nbsp;</strong> {visiblePasswords[password._id] ? password.password : "••••••••"}
+                <span className="flex text-red-500">
+                  <span
+                    className="px-2 cursor-pointer"
+                    onClick={() => togglePasswordVisibility(password._id)}
+                  >
+                    {visiblePasswords[password._id] ? <EyeOff /> : <Eye />}
+                  </span>
+                  <span className="px-2 cursor-pointer"
+                    onClick={() => copyToClipboard(password.password)}
+                  >
+                    <Copy />
+                  </span>
+                </span>
               </p>
               <p className="py-1 text-sm sm:text-base">
                 <strong>Category: &nbsp;</strong> {password.category}
@@ -261,7 +316,14 @@ const Dashboard = () => {
       <Modal
         show={openAddModal}
         size="md"
-        onClose={() => setOpenAddModal(false)}
+        onClose={() => {
+          setOpenAddModal(false);
+          setAccountName("");
+          setUserName("");
+          setPassword("");
+          setUrl("");
+          setCategory("");
+        }}
         popup
       >
         <Modal.Header />

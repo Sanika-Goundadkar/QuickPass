@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import BackButton from "./BackButton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../api/axiosInstance.js";
-
-// import { set } from "mongoose";
-
-// axios.defaults.baseURL = "http://localhost:5000"; // Replace with your backend server URL
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginContainer = () => {
   const [email, setEmail] = useState("");
   const [masterPassword, setMasterPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -51,10 +47,8 @@ const LoginContainer = () => {
           if (otpResponse.data.success) {
             console.log("OTP sent successful:", otpResponse.data);
             toast.success("OTP sent successful");
-            navigate("/otp");
-            console.log("redirecting to OTP authentication");
-
-            window.location.replace("/otp");
+            navigate("/otp", { replace: true });
+            // console.log("redirecting to OTP authentication");
           } else {
             setError("Failed to send OTP");
           }
@@ -71,6 +65,10 @@ const LoginContainer = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevVisibility) => !prevVisibility);
   };
 
   return (
@@ -97,9 +95,9 @@ const LoginContainer = () => {
                   required
                 />
               </div>
-              <div className="mb-4 mx-0 px-0">
+              <div className="mb-4 mx-0 px-0 relative">
                 <input
-                  type="password"
+                  type={isPasswordVisible ? "text" : "password"}
                   placeholder="Master password"
                   id="masterPassword"
                   value={masterPassword}
@@ -107,6 +105,12 @@ const LoginContainer = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white max-w-md"
                   required
                 />
+                <span
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-2 cursor-pointer text-red-500"
+                >
+                  {isPasswordVisible ? <EyeOff /> : <Eye />}
+                </span>
                 <p className="text-white pt-3 text-sm">
                   Forgot password?{" "}
                   <Link
@@ -120,9 +124,8 @@ const LoginContainer = () => {
               <div className="flex flex-col items-center justify-between mx-0 px-0">
                 <button
                   type="submit"
-                  className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white w-20  my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white w-20  my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   disabled={isLoading}
                 >
                   {isLoading ? "Logging in..." : "Login"}

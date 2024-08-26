@@ -14,10 +14,15 @@ const Navbar = () => {
       <div className="container px-4 mx-auto relative text-sm">
         <div className="flex justify-between items-center">
           <div className="flex items-center flex-shrink-0">
-            <img className="h-10 w-10 mr-2" src="/logo.png" alt="logo" />
-            <span className="text-xl font-semibold tracking-tight">
-              QuickPass
-            </span>
+            <Link
+              to="/"
+              className="flex items-center text-white font-semibold text-xl tracking-tight space-x-2"
+            >
+              <img className="h-10 w-10 mr-2" src="/logo.png" alt="logo" />
+              <span className="text-xl font-semibold tracking-tight">
+                QuickPass
+              </span>
+            </Link>
           </div>
           <ul className="hidden lg:flex ml-14 space-x-12">
             {navItems.map((item, index) => (

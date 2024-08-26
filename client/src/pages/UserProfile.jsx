@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../api/axiosInstance.js";
+import DashboardNav from "../components/DashboardNav.jsx";
+import { Eye, EyeOff } from "lucide-react";
 
 const UserProfile = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -13,20 +16,25 @@ const UserProfile = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
     password: "",
-    // Add other fields as needed
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUserID = localStorage.getItem("userID");
     if (!storedUserID) {
-      alert("Please Authenticate First.");
+      // alert("Please Authenticate First.");
+
       // Redirect to login or show an error
-      window.location.href = "/login";
-      return null; // Prevent further execution of the component
+      navigate("/login", { replace: true });
+      return null;
     }
 
     const fetchUserData = async () => {
@@ -105,20 +113,36 @@ const UserProfile = () => {
       }
 
       // Clear user data from local storage and redirect to login page
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       localStorage.removeItem("userID");
       localStorage.removeItem("email");
 
       alert(
         "Your account has been  deleted successfully & you will be redirected to the homepage."
       );
-      window.location.href = "/"; // Redirect to home page
+      navigate("/", { replace: true }); // Redirect to home page
     } catch (error) {
       console.log("Error deleting user", error);
     }
   };
 
+  const toggleOldPasswordVisibility = () => {
+    setShowOldPassword(!showOldPassword);
+  };
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+
   return (
     <>
+      <DashboardNav />
       <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 sm:p-6 md:p-8">
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-xl lg:max-w-2xl">
           <div className="flex flex-col items-center">
@@ -175,48 +199,65 @@ const UserProfile = () => {
                 Change Master Password :
               </h3>
             </div>
-            <div>
+            <div className="relative">
               <label className="block mb-2 text-sm font-medium">
                 Old Password:
               </label>
               <input
-                type="password"
+                type={showOldPassword ? "text" : "password"}
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <span
+                onClick={toggleOldPasswordVisibility}
+                className="absolute right-3 top-9 cursor-pointer text-red-500"
+              >
+                {showOldPassword ? <EyeOff /> : <Eye />}
+              </span>
             </div>
-            <div>
+            <div className="relative">
               <label className="block mb-2 text-sm font-medium">
                 New Password:
               </label>
               <input
-                type="password"
+                type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <span
+                onClick={toggleNewPasswordVisibility}
+                className="absolute right-3 top-9 cursor-pointer text-red-500"
+              >
+                {showNewPassword ? <EyeOff /> : <Eye />}
+              </span>
             </div>
-            <div>
+            <div className="relative">
               <label className="block mb-2 text-sm font-medium">
                 Confirm New Password:
               </label>
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <span
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-9 cursor-pointer text-red-500"
+              >
+                {showConfirmPassword ? <EyeOff /> : <Eye />}
+              </span>
             </div>
             <div className="flex justify-center mt-4">
               <button
                 type="submit"
-                className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-4 py-2 px-4 rounded-md w-full md:w-auto ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-4 py-2 px-4 rounded-md w-full md:w-auto ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
               >
                 {isLoading ? "Changing Password..." : "Change Password"}

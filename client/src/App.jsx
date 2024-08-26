@@ -7,8 +7,6 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy.jsx";
 import TermsOfService from "./pages/TermsOfService";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import OtpVerification from "./pages/Otp.jsx";
 import RegisterOtpVerification from "./pages/RegisterOtp.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -19,6 +17,8 @@ import SecurityQuestions from "./pages/SecurityQuestions.jsx";
 import VerifySecurityQuestions from "./pages/VerifySecurityQuestions.jsx";
 import Dashboard from "./pages/Dashboard";
 import UserProfile from "./pages/UserProfile.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (

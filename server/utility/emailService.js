@@ -1,20 +1,22 @@
 import nodemailer from "nodemailer";
-import mg from "nodemailer-mailgun-transport";
 
-const auth = {
+// console.log(process.env.EMAIL_USER);
+// console.log(process.env.EMAIL_PASS);
+
+// Create a transporter object using Gmail's SMTP transport
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  secure: true,
+  port: 465,
   auth: {
-    api_key: process.env.MAILGUN_API_KEY, // Your Mailgun API key
-    domain: process.env.MAILGUN_DOMAIN, // Your Mailgun domain
+    user: process.env.EMAIL_USER, // Your Gmail email address
+    pass: process.env.EMAIL_PASS, // Your Gmail password or app-specific password
   },
-};
-// console.log(process.env.MAILGUN_API_KEY);
-// console.log(process.env.MAILGUN_DOMAIN);
-
-const transporter = nodemailer.createTransport(mg(auth));
+});
 
 export const sendOtpToEmail = async (email, otp) => {
   const mailOptions = {
-    from: "no-reply@yourdomain.com", // Your verified sender email
+    from: process.env.EMAIL_USER, // Your Gmail address
     to: email,
     subject: "Your OTP Code",
     text: `Your OTP code is ${otp}. It is valid for 10 minutes.`,

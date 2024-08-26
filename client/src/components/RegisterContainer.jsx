@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import BackButton from "./BackButton";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../api/axiosInstance.js";
+import { Eye, EyeOff } from "lucide-react";
 
 const RegisterContainer = () => {
   const [name, setName] = useState("");
@@ -12,6 +12,7 @@ const RegisterContainer = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -27,7 +28,6 @@ const RegisterContainer = () => {
       });
 
       if (response.data.success) {
-        // Handle successful registration (e.g., show success message or redirect)
         localStorage.setItem("email", email);
         console.log("Registration successful:", response.data);
         localStorage.setItem("userID", response.data.user.id);
@@ -47,11 +47,9 @@ const RegisterContainer = () => {
           // const id = otpResponse.data.id;
           if (otpResponse.data.success) {
             console.log("OTP sent successful:", otpResponse.data);
-            alert("OTP sent successful");
-            navigate("/register-otp");
-            console.log("redirecting to OTP authentication");
+            toast.success("OTP sent successful");
 
-            // window.location.replace("/otp");
+            navigate("/register-otp", { replace: true });
           } else {
             setError("Failed to send OTP");
             const deleteUserResponse = await axiosInstance.post(
@@ -72,6 +70,10 @@ const RegisterContainer = () => {
     }
 
     setIsLoading(false);
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevVisibility) => !prevVisibility);
   };
 
   return (
@@ -107,9 +109,9 @@ const RegisterContainer = () => {
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <input
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               id="password"
               placeholder="Set master password"
               value={password}
@@ -117,14 +119,19 @@ const RegisterContainer = () => {
               className="shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
               required
             />
+            <span
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-2 cursor-pointer text-red-500"
+            >
+              {isPasswordVisible ? <EyeOff /> : <Eye />}
+            </span>
           </div>
           <div className="flex flex-col items-center justify-between">
             <button
               type="submit"
               title="Register to QuickPass"
-              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`bg-gradient-to-r from-orange-500 to-orange-800 text-white my-3 py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               disabled={isLoading}
             >
               {isLoading ? "Registering..." : "Register"}

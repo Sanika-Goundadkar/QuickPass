@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiSearch, FiUser, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,20 +13,24 @@ import {
 
 const DashboardNav = ({ searchTerm, onSearch }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     // Clear user data from local storage
+    console.log(localStorage.getItem("login"));
+
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userID");
     localStorage.removeItem("email");
-    localStorage.removeItem("token"); // If you are using a token for authentication
+    localStorage.removeItem("login");
 
     console.log("Logged out Successfully!");
+    console.log(localStorage.getItem("login"));
     toast.success("Logged out Successfully!");
 
     // Redirect to the login page
-    window.location.href = "/login"; // Adjust the path as needed
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -89,9 +93,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                     {({ active }) => (
                       <Link
                         to="/profile"
-                        className={`${
-                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        className={`${active ? "bg-gray-300 text-gray-900" : "text-gray-700"
+                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiUser className="mr-2" size={18} />
                         Profile
@@ -102,9 +105,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                     {({ active }) => (
                       <button
                         onClick={handleLogout}
-                        className={`${
-                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        className={`${active ? "bg-gray-300 text-gray-900" : "text-gray-700"
+                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiLogOut className="mr-2" size={18} />
                         Logout
@@ -120,9 +122,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden ${
-          open ? "block" : "hidden"
-        } bg-gray-800 bg-opacity-70 backdrop-blur-lg p-4`}
+        className={`lg:hidden ${open ? "block" : "hidden"
+          } bg-gray-800 bg-opacity-70 backdrop-blur-lg p-4`}
       >
         {/* Search Bar for Mobile */}
         <div className="relative">
@@ -163,9 +164,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                     {({ active }) => (
                       <Link
                         to="/profile"
-                        className={`${
-                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        className={`${active ? "bg-gray-300 text-gray-900" : "text-gray-700"
+                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiUser className="mr-2" size={18} />
                         Profile
@@ -176,9 +176,8 @@ const DashboardNav = ({ searchTerm, onSearch }) => {
                     {({ active }) => (
                       <Link
                         onClick={handleLogout}
-                        className={`${
-                          active ? "bg-gray-300 text-gray-900" : "text-gray-700"
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        className={`${active ? "bg-gray-300 text-gray-900" : "text-gray-700"
+                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                       >
                         <FiLogOut className="mr-2" size={18} />
                         Logout

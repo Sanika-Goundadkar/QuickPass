@@ -4,8 +4,19 @@ import FeatureSection from "../components/FeatureSection.jsx";
 import Workflow from "../components/Workflow.jsx";
 import Footer from "../components/Footer.jsx";
 import CallToAction from "../components/CallToAction.jsx";
+import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("login");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <>
       <Navbar />
